@@ -33,9 +33,6 @@ checksum:
   name_template: 'checksums.txt'
 
 release:
-  github:
-    owner: afrxo
-    name: feago
   draft: false
   prerelease: auto
   mode: replace
@@ -53,10 +50,13 @@ changelog:
 
 homebrew_casks:
   - name: feago
+    # Pushing to another repo needs a PAT; skip the tap when it is not set
+    # so a release is not blocked by a missing secret.
+    skip_upload: '{{ if envOrDefault "TAP_GITHUB_TOKEN" "" }}false{{ else }}true{{ end }}'
     repository:
       owner: afrxo
       name: homebrew-tap
-      token: "{{ .Env.TAP_GITHUB_TOKEN }}"
+      token: '{{ envOrDefault "TAP_GITHUB_TOKEN" "" }}'
     directory: Casks
     homepage: https://github.com/afrxo/feago
     description: Rojo project generator that organizes Roblox code by feature instead of realm
